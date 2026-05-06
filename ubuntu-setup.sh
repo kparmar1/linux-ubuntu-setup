@@ -52,14 +52,46 @@ install_apps() {
     log "  - Installing Spotify"
 }
 
+clean_logs() {
+    rm -f log/*.log
+    echo "Log files cleaned"
+}
+
+MODE="all"
+CLEAN=0
+
+while getopts "ci:" opt; do
+    case $opt in
+        c)
+            CLEAN=1
+            ;;
+        i)
+            MODE="$OPTARG"
+            ;;
+        *)
+            echo "Usage: $0 -i [dev|web|media|apps|all(default)]" >&2
+            exit 1
+            ;;
+    esac
+done
+
+if [ "$CLEAN" -eq 1 ]; then
+    clean_logs
+    exit 0
+fi
+
 init
 
 log "Setting up Ubuntu.."
 
 MODE="all"
 
-while getopts "i:" opt; do
+while getopts "ci:" opt; do
     case $opt in
+        c)
+            clean_logs
+            exit 0
+            ;;
         i)
             MODE="$OPTARG"
             ;;
