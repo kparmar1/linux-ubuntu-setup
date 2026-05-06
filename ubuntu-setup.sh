@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TIMESTAMP=$(date +"%d-%m-%Y.%H.%M.%S")
+TIMESTAMP=$(date +"%d-%m-%Y--%H-%M-%S")
 LOG_FILE="log/ubuntu-setup-${TIMESTAMP}.log"
 
 log() {
