@@ -57,19 +57,31 @@ clean_logs() {
     echo "Log files cleaned"
 }
 
+show_help() {
+    echo "Usage: $0 [OPTIONS]"
+    echo "  -c    Clean log directory"
+    echo "  -i    Setup option: dev|web|media|apps|all (default: all)"
+    echo "  -h    Show this help message"
+}
+
 MODE="all"
 CLEAN=0
 
-while getopts "ci:" opt; do
+while getopts "ci:h" opt; do
     case $opt in
         c)
             CLEAN=1
             ;;
+        h)
+            show_help
+            exit 0
+            ;;
         i)
             MODE="$OPTARG"
             ;;
-        *)
-            echo "Usage: $0 -c | -i [dev|web|media|apps|all(default)]" >&2
+*)
+            echo "Invalid option: $MODE" >&2
+            show_help >&2
             exit 1
             ;;
     esac
@@ -83,24 +95,6 @@ fi
 init
 
 log "Setting up Ubuntu.."
-
-MODE="all"
-
-while getopts "ci:" opt; do
-    case $opt in
-        c)
-            clean_logs
-            exit 0
-            ;;
-        i)
-            MODE="$OPTARG"
-            ;;
-        *)
-            echo "Usage: $0 -c | -i [dev|web|media|apps|all(default)]" >&2
-            exit 1
-            ;;
-    esac
-done
 
 case "$MODE" in
     dev)
@@ -121,10 +115,10 @@ case "$MODE" in
         install_media
         install_apps
         ;;
-    *)
-        echo "Invalid option: $MODE" >&2
-        exit 1
-        ;;
+*)
+            show_help >&2
+            exit 1
+            ;;
 esac
 
 log "Setup complete"
