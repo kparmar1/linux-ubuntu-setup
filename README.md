@@ -62,15 +62,6 @@ To add a new setup option:
    )
    ```
 
-## Pushing to GitHub
-
-```bash
-# Create a new repository on GitHub, then:
-git remote add origin https://github.com/<username>/<repo>.git
-git branch -M main
-git push -u origin main
-```
-
 ## Log Files
 
 Log files are stored in `log/` with timestamp format: `ubuntu-setup-DD-MM-YYYY--HH-MM-SS.log`
