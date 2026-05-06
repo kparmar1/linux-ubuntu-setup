@@ -69,7 +69,7 @@ while getopts "ci:" opt; do
             MODE="$OPTARG"
             ;;
         *)
-            echo "Usage: $0 -i [dev|web|media|apps|all(default)]" >&2
+            echo "Usage: $0 -c | -i [dev|web|media|apps|all(default)]" >&2
             exit 1
             ;;
     esac
@@ -96,7 +96,7 @@ while getopts "ci:" opt; do
             MODE="$OPTARG"
             ;;
         *)
-            echo "Usage: $0 -i [dev|web|media|apps|all(default)]" >&2
+            echo "Usage: $0 -c | -i [dev|web|media|apps|all(default)]" >&2
             exit 1
             ;;
     esac
