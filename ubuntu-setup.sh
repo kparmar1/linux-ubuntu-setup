@@ -1,6 +1,7 @@
 #!/bin/bash
 
-LOG_FILE="log/ubuntu-setup.log"
+TIMESTAMP=$(date +"%d-%m-%Y.%H.%M.%S")
+LOG_FILE="log/ubuntu-setup-${TIMESTAMP}.log"
 
 log() {
     echo "$1" | tee -a "$LOG_FILE"
