@@ -3,60 +3,68 @@
 TIMESTAMP=$(date +"%d-%m-%Y--%H-%M-%S")
 LOG_FILE="log/ubuntu-setup-${TIMESTAMP}.log"
 
-log() {
-    echo "$1" | tee -a "$LOG_FILE"
-}
+# Redirect both stdout and stderr to tee
+exec > >(tee -a "$LOG_FILE") 2>&1
 
 declare -A SETUP_OPTIONS=(
     ["dev"]="install_dev"
     ["web"]="install_web"
     ["media"]="install_media"
     ["apps"]="install_apps"
+    ["secure"]="install_secure"
 )
 
 init() {
-    log "Initializing setup.."
+    echo "Initializing setup.."
     echo -n "Please paste in your public key: "
     read -r PUBLIC_KEY
     if [ -n "$PUBLIC_KEY" ]; then
-        log "  - Public key received"
+        echo "  - Public key received"
     else
-        log "  - No public key provided, skipping SSH key setup"
+        echo "  - No public key provided, skipping SSH key setup"
     fi
 }
 
 install_dev() {
-    log "Setting up development environment.."
-    log "  - Installing build tools"
-    log "  - Installing Git"
-    log "  - Installing Python"
-    log "  - Installing Node.js"
-    log "  - Installing Docker"
-    log "  - Installing VS Code"
+    echo "Setting up development environment.."
+    echo "  - Installing build tools"
+    echo "  - Installing Git"
+    echo "  - Installing Python"
+    echo "  - Installing Node.js"
+    echo "  - Installing Docker"
+    echo "  - Installing VS Code"
 }
 
 install_web() {
-    log "Setting up web server.."
-    log "  - Installing Apache/Nginx"
-    log "  - Installing PHP"
-    log "  - Installing MySQL/MariaDB"
-    log "  - Configuring firewall"
+    echo "Setting up web server.."
+    echo "  - Installing Apache/Nginx"
+    echo "  - Installing PHP"
+    echo "  - Installing MySQL/MariaDB"
+    echo "  - Configuring firewall"
 }
 
 install_media() {
-    log "Setting up media tools.."
-    log "  - Installing FFmpeg"
-    log "  - Installing GIMP"
-    log "  - Installing Blender"
-    log "  - Installing Audacity"
+    echo "Setting up media tools.."
+    echo "  - Installing FFmpeg"
+    echo "  - Installing GIMP"
+    echo "  - Installing Blender"
+    echo "  - Installing Audacity"
 }
 
 install_apps() {
-    log "Setting up applications.."
-    log "  - Installing Slack"
-    log "  - Installing Discord"
-    log "  - Installing Chrome"
-    log "  - Installing Spotify"
+    echo "Setting up applications.."
+    echo "  - Installing Slack"
+    echo "  - Installing Discord"
+    echo "  - Installing Chrome"
+    echo "  - Installing Spotify"
+}
+
+install_secure () {
+    echo "Securing the os.."
+
+    # stop all telemtry
+    echo "   Stopping all telemetry.."
+    ubuntu-report -f send no
 }
 
 clean_logs() {
@@ -108,7 +116,7 @@ fi
 
 init
 
-log "Setting up Ubuntu.."
+echo "Setting up Ubuntu.."
 
 if [ "$MODE" = "all" ]; then
     for option in "${!SETUP_OPTIONS[@]}"; do
@@ -118,4 +126,4 @@ else
     "${SETUP_OPTIONS[$MODE]}"
 fi
 
-log "Setup complete"
+echo "Setup complete"
