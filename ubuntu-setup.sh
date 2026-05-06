@@ -7,6 +7,13 @@ log() {
     echo "$1" | tee -a "$LOG_FILE"
 }
 
+declare -A SETUP_OPTIONS=(
+    ["dev"]="install_dev"
+    ["web"]="install_web"
+    ["media"]="install_media"
+    ["apps"]="install_apps"
+)
+
 init() {
     log "Initializing setup.."
     echo -n "Please paste in your public key: "
@@ -60,7 +67,9 @@ clean_logs() {
 show_help() {
     echo "Usage: $0 [OPTIONS]"
     echo "  -c    Clean log directory"
-    echo "  -i    Setup option: dev|web|media|apps|all (default: all)"
+    echo -n "  -i    Setup option: "
+    printf "%s " "${!SETUP_OPTIONS[@]}" | sed 's/ /|/g'
+    echo "(default: all)"
     echo "  -h    Show this help message"
 }
 
@@ -79,7 +88,7 @@ while getopts "ci:h" opt; do
         i)
             MODE="$OPTARG"
             ;;
-*)
+        *)
             echo "Invalid option: $MODE" >&2
             show_help >&2
             exit 1
@@ -92,33 +101,21 @@ if [ "$CLEAN" -eq 1 ]; then
     exit 0
 fi
 
+if [ "$MODE" != "all" ] && [ -z "${SETUP_OPTIONS[$MODE]}" ]; then
+    show_help >&2
+    exit 1
+fi
+
 init
 
 log "Setting up Ubuntu.."
 
-case "$MODE" in
-    dev)
-        install_dev
-        ;;
-    web)
-        install_web
-        ;;
-    media)
-        install_media
-        ;;
-    apps)
-        install_apps
-        ;;
-    all)
-        install_dev
-        install_web
-        install_media
-        install_apps
-        ;;
-*)
-            show_help >&2
-            exit 1
-            ;;
-esac
+if [ "$MODE" = "all" ]; then
+    for option in "${!SETUP_OPTIONS[@]}"; do
+        "${SETUP_OPTIONS[$option]}"
+    done
+else
+    "${SETUP_OPTIONS[$MODE]}"
+fi
 
 log "Setup complete"
