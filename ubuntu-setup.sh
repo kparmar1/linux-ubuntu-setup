@@ -14,6 +14,13 @@ declare -A SETUP_OPTIONS=(
     ["secure"]="install_secure"
 )
 
+declare -A TELEMETRY_SITES=(
+    ["www.metrics.ubuntu.com"]="127.0.0.1"
+    ["metrics.ubuntu.com"]="127.0.0.1"
+    ["www.popcon.ubuntu.com"]="127.0.0.1"
+    ["popcon.ubuntu.com"]="127.0.0.1"
+)
+
 init() {
     echo "Initializing setup.."
     echo -n "Please paste in your public key: "
@@ -60,11 +67,29 @@ install_apps() {
 }
 
 install_secure () {
-    echo "Securing the os.."
+    echo "Securing the Linux OS.."
+    echo
+    echo
 
     # stop all telemtry
     echo "   Stopping all telemetry.."
-    ubuntu-report -f send no
+    if command -v ubuntu-report &>/dev/null; then
+        ubuntu-report -f send no
+    fi
+
+    for site in "${!TELEMETRY_SITES[@]}"; do
+        if ! grep -Fq " ${site}" "/etc/hosts"; then
+            echo "${TELEMETRY_SITES[$site]} $site" | sudo tee -a /etc/hosts
+        fi
+    done
+
+    sudo apt purge -y ubuntu-report popularity-contest apport whoopsie apport-symptoms
+    sudo apt-mark hold ubuntu-report popularity-contest apport whoopsie apport-symptoms
+
+    echo
+    echo "Securing the Linux OS. Done."
+    echo
+    echo
 }
 
 clean_logs() {
