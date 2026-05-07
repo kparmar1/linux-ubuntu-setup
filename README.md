@@ -22,7 +22,7 @@ A bash script to set up an Ubuntu machine with custom configurations.
 - `-i shell` - Install Fish shell and set as default
 - `-i xfce` - Install XFCE desktop environment
 - `-i display-settings` - Set dark color scheme and desktop background
-- `-i all` - Run all setup options (in order: init → secure → dev → media → apps → shell → xfce → display-settings)
+- `-i all` - Run all setup options (in order: init → secure → dev → media → apps → shell → display-settings)
 - `-h` - Show help message
 
 ### Examples

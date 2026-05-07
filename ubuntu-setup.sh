@@ -19,7 +19,7 @@ declare -A SETUP_OPTIONS=(
     ["display-settings"]="install_display_settings"
 )
 
-SETUP_ORDER=(init secure dev media apps shell xfce display-settings)
+SETUP_ORDER=(init secure dev media apps shell display-settings)
 
 
 init() {
