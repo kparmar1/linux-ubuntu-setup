@@ -47,6 +47,13 @@ A bash script to set up an Ubuntu machine with custom configurations.
 ./ubuntu-setup.sh -c
 ```
 
+## Prerequisites
+
+Before running the setup, place your files in the following directories:
+
+- **SSH keys**: Place your SSH private keys in the `keys/` directory. These will be copied to `~/.ssh/` during the `dev` setup.
+- **Desktop background**: Place your background image in `images/` (default: `linux-desktop.jpg`). Used by the `display-settings` option.
+
 ## Adding New Setup Options
 
 To add a new setup option:
