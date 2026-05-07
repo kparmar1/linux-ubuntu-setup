@@ -47,7 +47,9 @@ EOF
     sudo apt install flatpak -y
 
     echo "  - Ubuntu Restricted Extras"
-    sudo apt install ubuntu-restricted-extras
+    echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
+    sudo apt install ubuntu-restricted-extras -y
+    sudo apt install ubuntu-restricted-extras -y
 }
 
 install_secure () {
@@ -152,9 +154,9 @@ EOF
     
     sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
-    sudo groupadd docker
+    getent group docker || sudo groupadd docker
     sudo usermod -aG docker $USER
-    newgrp docker
+    #newgrp docker
 
 
     echo "  - Installing VS Code"
