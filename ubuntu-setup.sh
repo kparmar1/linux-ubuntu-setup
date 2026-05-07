@@ -3,13 +3,9 @@
 TIMESTAMP=$(date +"%d-%m-%Y--%H-%M-%S")
 LOG_FILE="log/ubuntu-setup-${TIMESTAMP}.log"
 KEY_FILES="keys"
-NODE_VERSION=24
 BACKGROUND_IMAGE=linux-desktop.jpg
 BACKGROUND_IMAGE_TARGET=~/Pictures/background
 BACKGROUND_IMAGE_SOURCE=images/${BACKGROUND_IMAGE}
-
-# Redirect both stdout and stderr to tee
-exec > >(tee -a "$LOG_FILE") 2>&1
 
 declare -A SETUP_OPTIONS=(
     ["init"]="init"
@@ -49,7 +45,6 @@ EOF
 
     echo "  - Ubuntu Restricted Extras"
     echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
-    sudo apt install ubuntu-restricted-extras -y
     sudo apt install ubuntu-restricted-extras -y
 }
 
@@ -208,7 +203,7 @@ install_xfce () {
 }
 
 install_display_settings() {
-    echo "Setting up display settings for .."
+    echo "Setting up display settings..."
     gsettings set org.gnome.desktop.interface color-scheme prefer-dark
     mkdir -p ${BACKGROUND_IMAGE_TARGET}
     cp --update=none ${BACKGROUND_IMAGE_SOURCE} ${BACKGROUND_IMAGE_TARGET}/${BACKGROUND_IMAGE}
@@ -242,6 +237,8 @@ if [ "$CLEAN" -eq 1 ]; then
     clean_logs
     exit 0
 fi
+
+exec > >(tee -a "$LOG_FILE") 2>&1
 
 if [ "$MODE" != "all" ] && [ -z "${SETUP_OPTIONS[$MODE]}" ]; then
     show_help >&2
