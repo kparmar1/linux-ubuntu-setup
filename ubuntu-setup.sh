@@ -21,6 +21,8 @@ declare -A SETUP_OPTIONS=(
     ["display-settings"]="install_display_settings"
 )
 
+SETUP_ORDER=(secure dev media apps shell xfce display-settings)
+
 
 init() {
     echo "Initializing setup.."
@@ -95,10 +97,9 @@ show_help() {
 }
 
 install_packages_internal() {
-    PACKAGES=$0
-    for package in ${PACKAGES}; do
+    for package in "$@"; do
         echo "  - Installing package ${package}"
-        sudo apt install ${package} -y
+        sudo apt install "${package}" -y
     done
 }
 
@@ -127,7 +128,9 @@ install_dev() {
 
 install_dev_complex() {
     echo "  - Copying keys (if found)"
-    cp -p ${KEY_FILES}/* ~/.ssh/
+    mkdir -p ~/.ssh
+    chmod 700 ~/.ssh
+    cp -p ${KEY_FILES}/* ~/.ssh/ 2>/dev/null || true
 
     echo "  - Installing Docker"
     sudo apt remove $(dpkg --get-selections docker.io docker-compose docker-compose-v2 docker-doc podman-docker containerd runc | cut -f1)
@@ -247,7 +250,7 @@ init
 echo "Setting up Ubuntu.."
 
 if [ "$MODE" = "all" ]; then
-    for option in "${!SETUP_OPTIONS[@]}"; do
+    for option in "${SETUP_ORDER[@]}"; do
         "${SETUP_OPTIONS[$option]}"
     done
 else
