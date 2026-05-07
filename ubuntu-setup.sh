@@ -78,7 +78,7 @@ install_secure () {
 
     sudo apt-get purge -y ubuntu-report popularity-contest apport whoopsie apport-symptoms
     sudo apt-mark hold ubuntu-report popularity-contest apport whoopsie apport-symptoms
-    sudo apt-get autoremove
+    sudo apt-get autoremove -y
 
 
     echo "  - Enable UFW (firewall).."
@@ -149,9 +149,7 @@ Architectures: $(dpkg --print-architecture)
 Signed-By: /etc/apt/keyrings/docker.asc
 EOF
     sudo apt-get update -y
-    
     sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
-
     getent group docker || sudo groupadd docker
     sudo usermod -aG docker $USER
     newgrp docker
