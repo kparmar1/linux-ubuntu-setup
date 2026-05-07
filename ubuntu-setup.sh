@@ -25,27 +25,28 @@ init() {
     echo "Initializing setup.."
 
     echo "  - Updating OS"
-    sudo apt update -y
-    sudo apt upgrade -y
+    sudo apt-get update -y
+    sudo apt-get upgrade -y
 
     echo "  - Removing Snap & Block"
-    snap list | grep -v base | awk '{print $1}' | xargs -I{} sudo snap remove {} --purge
-    snap list | grep base | awk '{print $1}' | xargs -I{} sudo snap remove {} --purge
+    snap list | grep -v base | awk '{print $1}' | grep -v Name | grep -v snapd | xargs -I{} sudo snap remove {} --purge
+    snap list | grep base | awk '{print $1}' | grep -v Name | xargs -I{} sudo snap remove {} --purge
     sudo systemctl disable --now snapd.socket snapd.service
-    sudo apt remove --purge -y snapd
+    sudo apt-get remove --purge -y snapd
     sudo rm -rf /var/cache/snapd ~/snap /snap /var/snap
     sudo tee /etc/apt/preferences.d/no-snap.pref <<EOF
     Package: snapd
     Pin: release a=*
     Pin-Priority: -10
 EOF
+    sudo apt-get autoremove
 
     echo "  - Installing Flatpak"
-    sudo apt install flatpak -y
+    sudo apt-get install flatpak -y
 
     echo "  - Ubuntu Restricted Extras"
     echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
-    sudo apt install ubuntu-restricted-extras -y
+    sudo apt-get install ubuntu-restricted-extras -y
 }
 
 install_secure () {
@@ -72,8 +73,9 @@ install_secure () {
         fi
     done
 
-    sudo apt purge -y ubuntu-report popularity-contest apport whoopsie apport-symptoms
+    sudo apt-get purge -y ubuntu-report popularity-contest apport whoopsie apport-symptoms
     sudo apt-mark hold ubuntu-report popularity-contest apport whoopsie apport-symptoms
+    sudo apt-get autoremove
 
 
     echo "  - Enable UFW (firewall).."
@@ -97,7 +99,7 @@ show_help() {
 install_packages_internal() {
     for package in "$@"; do
         echo "  - Installing package ${package}"
-        sudo apt install "${package}" -y
+        sudo apt-get install "${package}" -y
     done
 }
 
@@ -129,9 +131,9 @@ install_dev_complex() {
     cp -p ${KEY_FILES}/* ~/.ssh/ 2>/dev/null || true
 
     echo "  - Installing Docker"
-    sudo apt remove $(dpkg --get-selections docker.io docker-compose docker-compose-v2 docker-doc podman-docker containerd runc | cut -f1)
-    sudo apt update
-    sudo apt install ca-certificates curl -y
+    sudo apt-get remove $(dpkg --get-selections docker.io docker-compose docker-compose-v2 docker-doc podman-docker containerd runc | cut -f1)
+    sudo apt-get update
+    sudo apt-get install ca-certificates curl -y
     sudo install -m 0755 -d /etc/apt/keyrings
     sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
     sudo chmod a+r /etc/apt/keyrings/docker.asc
@@ -144,9 +146,9 @@ Components: stable
 Architectures: $(dpkg --print-architecture)
 Signed-By: /etc/apt/keyrings/docker.asc
 EOF
-    sudo apt update -y
+    sudo apt-get update -y
     
-    sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
     getent group docker || sudo groupadd docker
     sudo usermod -aG docker $USER
@@ -156,8 +158,8 @@ EOF
     echo "  - Installing VS Code"
     wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo install -D -o root -g root -m 644 /dev/stdin /etc/apt/keyrings/packages.microsoft.gpg
     echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | sudo tee /etc/apt/sources.list.d/vscode.list
-    sudo apt update -y
-    sudo apt install code -y
+    sudo apt-get update -y
+    sudo apt-get install code -y
 }
 
 install_media() {
@@ -183,21 +185,21 @@ install_apps_complex() {
     echo "  - Installing Thunderbird"
     sudo add-apt-repository ppa:mozillateam/ppa -y
     printf '%s\n' 'Package: thunderbird*' 'Pin: release o=LP-PPA-mozillateam' 'Pin-Priority: 1001' '' 'Package: thunderbird*' 'Pin: release o=Ubuntu' 'Pin-Priority: -1' | sudo tee /etc/apt/preferences.d/thunderbird-ppa
-    sudo apt update -y
-    sudo apt install --allow-downgrades thunderbird -y
+    sudo apt-get update -y
+    sudo apt-get install --allow-downgrades thunderbird -y
 
 }
 
 install_shell() {
     echo "  - Installing Fish Shell"
-    sudo apt install fish -y
+    sudo apt-get install fish -y
     command -v fish | sudo tee -a /etc/shells
     chsh -s "$(command -v fish)"
 }
 
 install_xfce () {
     echo "Installing desktop env (xfce).."
-    sudo apt install xfce4 xfce4-goodies -y
+    sudo apt-get install xfce4 xfce4-goodies -y
 }
 
 install_display_settings() {

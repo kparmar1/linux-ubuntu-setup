@@ -3,3 +3,4 @@ log/*.log
 
 # Keys (directory tracked, contents ignored)
 keys/*
+!keys/.gitkeep
