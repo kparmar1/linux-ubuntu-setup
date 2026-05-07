@@ -1,7 +1,8 @@
 #!/bin/bash
 
 TIMESTAMP=$(date +"%d-%m-%Y--%H-%M-%S")
-LOG_FILE="log/ubuntu-setup-${TIMESTAMP}.log"
+LOG_DIR=log
+LOG_FILE="${LOG_DIR}/ubuntu-setup-${TIMESTAMP}.log"
 KEY_FILES="keys"
 BACKGROUND_IMAGE=linux-desktop.jpg
 BACKGROUND_IMAGE_TARGET=~/Pictures/background
@@ -47,6 +48,8 @@ EOF
     echo "  - Ubuntu Restricted Extras"
     echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
     sudo apt-get install ubuntu-restricted-extras -y
+
+    sudo install -m 0755 -d /etc/apt/keyrings
 }
 
 install_secure () {
@@ -134,7 +137,6 @@ install_dev_complex() {
     sudo apt-get remove $(dpkg --get-selections docker.io docker-compose docker-compose-v2 docker-doc podman-docker containerd runc | cut -f1)
     sudo apt-get update
     sudo apt-get install ca-certificates curl -y
-    sudo install -m 0755 -d /etc/apt/keyrings
     sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
     sudo chmod a+r /etc/apt/keyrings/docker.asc
 
@@ -152,7 +154,7 @@ EOF
 
     getent group docker || sudo groupadd docker
     sudo usermod -aG docker $USER
-    #newgrp docker
+    newgrp docker
 
 
     echo "  - Installing VS Code"
@@ -173,12 +175,24 @@ install_media() {
 
 install_apps() {
     echo "Setting up other applications.."
-    PACKAGES="firefox"
+    PACKAGES=""
     install_packages_internal ${PACKAGES}
     install_apps_complex
 }
 
 install_apps_complex() {
+    echo "  - Installing Firefox"
+    wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O- | sudo tee /etc/apt/keyrings/packages.mozilla.org.asc > /dev/null
+    echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" | sudo tee /etc/apt/sources.list.d/mozilla.list
+    sudo tee /etc/apt/preferences.d/mozilla << 'EOF'
+Package: *
+Pin: origin packages.mozilla.org
+Pin-Priority: 1000
+EOF
+    sudo apt-get update
+    sudo apt-get install firefox
+
+
     echo "  - Installing Brave"
     curl -fsS https://dl.brave.com/install.sh | sh
 
@@ -244,6 +258,7 @@ if [ -z "$MODE" ]; then
     exit 1
 fi
 
+test -d "${LOG_DIR}" || mkdir ${LOG_DIR}
 exec > >(tee -a "$LOG_FILE") 2>&1
 
 if [ "$MODE" != "all" ] && [ -z "${SETUP_OPTIONS[$MODE]}" ]; then
