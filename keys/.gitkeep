@@ -1,0 +1,2 @@
+# This file ensures the keys directory is tracked in git
+# Add SSH private keys here - they will be ignored by .gitignore
