@@ -12,6 +12,7 @@ BACKGROUND_IMAGE_SOURCE=images/${BACKGROUND_IMAGE}
 exec > >(tee -a "$LOG_FILE") 2>&1
 
 declare -A SETUP_OPTIONS=(
+    ["init"]="init"
     ["secure"]="install_secure"
     ["dev"]="install_dev"
     ["media"]="install_media"
@@ -21,7 +22,7 @@ declare -A SETUP_OPTIONS=(
     ["display-settings"]="install_display_settings"
 )
 
-SETUP_ORDER=(secure dev media apps shell xfce display-settings)
+SETUP_ORDER=(init secure dev media apps shell xfce display-settings)
 
 
 init() {
@@ -246,8 +247,6 @@ if [ "$MODE" != "all" ] && [ -z "${SETUP_OPTIONS[$MODE]}" ]; then
     show_help >&2
     exit 1
 fi
-
-init
 
 echo "Setting up Ubuntu.."
 
