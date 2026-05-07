@@ -7,7 +7,7 @@ A bash script to set up an Ubuntu machine with custom configurations.
 ```bash
 ./ubuntu-setup.sh [OPTIONS]
   -c    Clean log directory
-  -i    Setup option: init|secure|dev|media|apps|shell|xfce|display-settings|all (default: all)
+  -i    Setup option: init|secure|dev|media|apps|shell|xfce|display-settings|all (required)
   -h    Show this help message
 ```
 
@@ -22,7 +22,7 @@ A bash script to set up an Ubuntu machine with custom configurations.
 - `-i shell` - Install Fish shell and set as default
 - `-i xfce` - Install XFCE desktop environment
 - `-i display-settings` - Set dark color scheme and desktop background
-- `-i all` - Run all setup options (default)
+- `-i all` - Run all setup options
 - `-h` - Show help message
 
 ### Examples
@@ -31,8 +31,8 @@ A bash script to set up an Ubuntu machine with custom configurations.
 # Show help
 ./ubuntu-setup.sh -h
 
-# Run all setups (default)
-./ubuntu-setup.sh
+# Run all setups
+./ubuntu-setup.sh -i all
 
 # Set up only development environment
 ./ubuntu-setup.sh -i dev

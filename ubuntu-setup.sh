@@ -210,7 +210,7 @@ install_display_settings() {
     gsettings set org.gnome.desktop.background picture-uri-dark "file:///${BACKGROUND_IMAGE_TARGET}/${BACKGROUND_IMAGE}"
 }
 
-MODE="all"
+MODE=""
 CLEAN=0
 
 while getopts "ci:h" opt; do
@@ -236,6 +236,12 @@ done
 if [ "$CLEAN" -eq 1 ]; then
     clean_logs
     exit 0
+fi
+
+if [ -z "$MODE" ]; then
+    show_help >&2
+    echo "Error: -i option is required" >&2
+    exit 1
 fi
 
 exec > >(tee -a "$LOG_FILE") 2>&1
