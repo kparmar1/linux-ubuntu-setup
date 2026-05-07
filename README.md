@@ -7,13 +7,14 @@ A bash script to set up an Ubuntu machine with custom configurations.
 ```bash
 ./ubuntu-setup.sh [OPTIONS]
   -c    Clean log directory
-  -i    Setup option: secure|dev|media|apps|shell|xfce|display-settings|all (default: all)
+  -i    Setup option: init|secure|dev|media|apps|shell|xfce|display-settings|all (default: all)
   -h    Show this help message
 ```
 
 ### Options
 
 - `-c` - Clean log files from the `log/` directory
+- `-i init` - Initialize system (apt update/upgrade, remove snap, install flatpak)
 - `-i secure` - Block Ubuntu telemetry sites, enable firewall (UFW)
 - `-i dev` - Set up development environment (Docker, VS Code, Java 21/25, Git, Kitty, SSH keys)
 - `-i media` - Set up media tools (FFmpeg, GIMP, Audacity, VLC)
@@ -37,6 +38,7 @@ A bash script to set up an Ubuntu machine with custom configurations.
 ./ubuntu-setup.sh -i dev
 
 # Set up multiple specific options
+./ubuntu-setup.sh -i init
 ./ubuntu-setup.sh -i secure
 ./ubuntu-setup.sh -i shell
 ./ubuntu-setup.sh -i xfce
@@ -61,9 +63,13 @@ To add a new setup option:
    ```bash
    declare -A SETUP_OPTIONS=(
        ["dev"]="install_dev"
-       ["web"]="install_web"
        ["foo"]="install_foo"
    )
+   ```
+
+3. Add to the `SETUP_ORDER` array to control execution order:
+   ```bash
+   SETUP_ORDER=(init secure dev foo media apps shell xfce display-settings)
    ```
 
 ## Log Files
