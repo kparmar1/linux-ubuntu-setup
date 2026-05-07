@@ -102,8 +102,6 @@ install_packages_internal() {
 }
 
 install_dev() {
-
-
     PACKAGES="net-tools
     btop
     fastfetch
