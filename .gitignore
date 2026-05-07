@@ -1,3 +1,5 @@
 # Logs
 log/*.log
-!
+
+# Keys (directory tracked, contents ignored)
+keys/*
