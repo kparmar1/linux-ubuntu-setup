@@ -7,17 +7,20 @@ A bash script to set up an Ubuntu machine with custom configurations.
 ```bash
 ./ubuntu-setup.sh [OPTIONS]
   -c    Clean log directory
-  -i    Setup option: dev|web|media|apps|all (default: all)
+  -i    Setup option: secure|dev|media|apps|shell|xfce|display-settings|all (default: all)
   -h    Show this help message
 ```
 
 ### Options
 
 - `-c` - Clean log files from the `log/` directory
-- `-i dev` - Set up development environment (build tools, Git, Python, Node.js, Docker, VS Code)
-- `-i web` - Set up web server (Apache/Nginx, PHP, MySQL/MariaDB)
-- `-i media` - Set up media tools (FFmpeg, GIMP, Blender, Audacity)
-- `-i apps` - Set up applications (Slack, Discord, Chrome, Spotify)
+- `-i secure` - Block Ubuntu telemetry sites, enable firewall (UFW)
+- `-i dev` - Set up development environment (Docker, VS Code, Java 21/25, Git, Kitty, SSH keys)
+- `-i media` - Set up media tools (FFmpeg, GIMP, Audacity, VLC)
+- `-i apps` - Set up applications (Firefox, Brave, Thunderbird)
+- `-i shell` - Install Fish shell and set as default
+- `-i xfce` - Install XFCE desktop environment
+- `-i display-settings` - Set dark color scheme and desktop background
 - `-i all` - Run all setup options (default)
 - `-h` - Show help message
 
@@ -33,9 +36,10 @@ A bash script to set up an Ubuntu machine with custom configurations.
 # Set up only development environment
 ./ubuntu-setup.sh -i dev
 
-# Set up web and media
-./ubuntu-setup.sh -i web
-./ubuntu-setup.sh -i media
+# Set up multiple specific options
+./ubuntu-setup.sh -i secure
+./ubuntu-setup.sh -i shell
+./ubuntu-setup.sh -i xfce
 
 # Clean log files
 ./ubuntu-setup.sh -c

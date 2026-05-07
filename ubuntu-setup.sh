@@ -2,77 +2,66 @@
 
 TIMESTAMP=$(date +"%d-%m-%Y--%H-%M-%S")
 LOG_FILE="log/ubuntu-setup-${TIMESTAMP}.log"
+KEY_FILES="keys"
+NODE_VERSION=24
+BACKGROUND_IMAGE=linux-desktop.jpg
+BACKGROUND_IMAGE_TARGET=~/Pictures/background
+BACKGROUND_IMAGE_SOURCE=images/${BACKGROUND_IMAGE}
 
 # Redirect both stdout and stderr to tee
 exec > >(tee -a "$LOG_FILE") 2>&1
 
 declare -A SETUP_OPTIONS=(
+    ["secure"]="install_secure"
     ["dev"]="install_dev"
-    ["web"]="install_web"
     ["media"]="install_media"
     ["apps"]="install_apps"
-    ["secure"]="install_secure"
+    ["shell"]="install_shell"
+    ["xfce"]="install_xfce"
+    ["display-settings"]="install_display_settings"
 )
 
-declare -A TELEMETRY_SITES=(
+
+init() {
+    echo "Initializing setup.."
+
+    echo "  - Updating OS"
+    sudo apt update -y
+    sudo apt upgrade -y
+
+    echo "  - Removing Snap & Block"
+    snap list | grep -v base | awk '{print $1}' | xargs -I{} sudo snap remove {} --purge
+    snap list | grep base | awk '{print $1}' | xargs -I{} sudo snap remove {} --purge
+    sudo systemctl disable --now snapd.socket snapd.service
+    sudo apt remove --purge -y snapd
+    sudo rm -rf /var/cache/snapd ~/snap /snap /var/snap
+    sudo tee /etc/apt/preferences.d/no-snap.pref <<EOF
+    Package: snapd
+    Pin: release a=*
+    Pin-Priority: -10
+EOF
+
+    echo "  - Installing Flatpak"
+    sudo apt install flatpak -y
+
+    echo "  - Ubuntu Restricted Extras"
+    sudo apt install ubuntu-restricted-extras
+}
+
+install_secure () {
+    declare -A TELEMETRY_SITES=(
     ["www.metrics.ubuntu.com"]="127.0.0.1"
     ["metrics.ubuntu.com"]="127.0.0.1"
     ["www.popcon.ubuntu.com"]="127.0.0.1"
     ["popcon.ubuntu.com"]="127.0.0.1"
-)
+    )
 
-init() {
-    echo "Initializing setup.."
-    echo -n "Please paste in your public key: "
-    read -r PUBLIC_KEY
-    if [ -n "$PUBLIC_KEY" ]; then
-        echo "  - Public key received"
-    else
-        echo "  - No public key provided, skipping SSH key setup"
-    fi
-}
-
-install_dev() {
-    echo "Setting up development environment.."
-    echo "  - Installing build tools"
-    echo "  - Installing Git"
-    echo "  - Installing Python"
-    echo "  - Installing Node.js"
-    echo "  - Installing Docker"
-    echo "  - Installing VS Code"
-}
-
-install_web() {
-    echo "Setting up web server.."
-    echo "  - Installing Apache/Nginx"
-    echo "  - Installing PHP"
-    echo "  - Installing MySQL/MariaDB"
-    echo "  - Configuring firewall"
-}
-
-install_media() {
-    echo "Setting up media tools.."
-    echo "  - Installing FFmpeg"
-    echo "  - Installing GIMP"
-    echo "  - Installing Blender"
-    echo "  - Installing Audacity"
-}
-
-install_apps() {
-    echo "Setting up applications.."
-    echo "  - Installing Slack"
-    echo "  - Installing Discord"
-    echo "  - Installing Chrome"
-    echo "  - Installing Spotify"
-}
-
-install_secure () {
     echo "Securing the Linux OS.."
     echo
     echo
 
     # stop all telemtry
-    echo "   Stopping all telemetry.."
+    echo "  - Stopping all telemetry.."
     if command -v ubuntu-report &>/dev/null; then
         ubuntu-report -f send no
     fi
@@ -86,10 +75,9 @@ install_secure () {
     sudo apt purge -y ubuntu-report popularity-contest apport whoopsie apport-symptoms
     sudo apt-mark hold ubuntu-report popularity-contest apport whoopsie apport-symptoms
 
-    echo
-    echo "Securing the Linux OS. Done."
-    echo
-    echo
+
+    echo "  - Enable UFW (firewall).."
+    sudo ufw enable
 }
 
 clean_logs() {
@@ -104,6 +92,121 @@ show_help() {
     printf "%s " "${!SETUP_OPTIONS[@]}" | sed 's/ /|/g'
     echo "(default: all)"
     echo "  -h    Show this help message"
+}
+
+install_packages_internal() {
+    PACKAGES=$0
+    for package in ${PACKAGES}; do
+        echo "  - Installing package ${package}"
+        sudo apt install ${package} -y
+    done
+}
+
+install_dev() {
+
+
+    PACKAGES="net-tools
+    btop
+    fastfetch
+    git subversion
+    util-linux-extra
+    finger
+    keepassxc
+    curl
+    openjdk-21-jdk
+    openjdk-25-jdk
+    apt-file
+    timeshift
+    gawk
+    kitty
+    flameshot
+    vim"
+    install_packages_internal ${PACKAGES}
+    install_dev_complex
+}
+
+install_dev_complex() {
+    echo "  - Copying keys (if found)"
+    cp -p ${KEY_FILES}/* ~/.ssh/
+
+    echo "  - Installing Docker"
+    sudo apt remove $(dpkg --get-selections docker.io docker-compose docker-compose-v2 docker-doc podman-docker containerd runc | cut -f1)
+    sudo apt update
+    sudo apt install ca-certificates curl -y
+    sudo install -m 0755 -d /etc/apt/keyrings
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+    sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+    sudo apt update -y
+    
+    sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+    sudo groupadd docker
+    sudo usermod -aG docker $USER
+    newgrp docker
+
+
+    echo "  - Installing VS Code"
+    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo install -D -o root -g root -m 644 /dev/stdin /etc/apt/keyrings/packages.microsoft.gpg
+    echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | sudo tee /etc/apt/sources.list.d/vscode.list
+    sudo apt update -y
+    sudo apt install code -y
+}
+
+install_media() {
+    echo "Setting up media tools.."
+    PACKAGES="ffmpeg
+    gimp
+    audacity
+    vlc"
+    install_packages_internal ${PACKAGES}
+}
+
+install_apps() {
+    echo "Setting up other applications.."
+    PACKAGES="firefox"
+    install_packages_internal ${PACKAGES}
+    install_apps_complex
+}
+
+install_apps_complex() {
+    echo "  - Installing Brave"
+    curl -fsS https://dl.brave.com/install.sh | sh
+
+    echo "  - Installing Thunderbird"
+    sudo add-apt-repository ppa:mozillateam/ppa -y
+    printf '%s\n' 'Package: thunderbird*' 'Pin: release o=LP-PPA-mozillateam' 'Pin-Priority: 1001' '' 'Package: thunderbird*' 'Pin: release o=Ubuntu' 'Pin-Priority: -1' | sudo tee /etc/apt/preferences.d/thunderbird-ppa
+    sudo apt update -y
+    sudo apt install --allow-downgrades thunderbird -y
+
+}
+
+install_shell() {
+    echo "  - Installing Fish Shell"
+    sudo apt install fish -y
+    command -v fish | sudo tee -a /etc/shells
+    chsh -s "$(command -v fish)"
+}
+
+install_xfce () {
+    echo "Installing desktop env (xfce).."
+    sudo apt install xfce4 xfce4-goodies -y
+}
+
+install_display_settings() {
+    echo "Setting up display settings for .."
+    gsettings set org.gnome.desktop.interface color-scheme prefer-dark
+    mkdir -p ${BACKGROUND_IMAGE_TARGET}
+    cp --update=none ${BACKGROUND_IMAGE_SOURCE} ${BACKGROUND_IMAGE_TARGET}/${BACKGROUND_IMAGE}
+    gsettings set org.gnome.desktop.background picture-uri-dark "file:///${BACKGROUND_IMAGE_TARGET}/${BACKGROUND_IMAGE}"
 }
 
 MODE="all"
