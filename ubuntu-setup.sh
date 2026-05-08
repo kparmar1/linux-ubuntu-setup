@@ -271,6 +271,12 @@ fi
 
 echo "Setting up Ubuntu.."
 
+echo
+echo "Running script with mode=${MODE}"
+echo
+echo
+echo
+
 if [ "$MODE" = "all" ]; then
     for option in "${SETUP_ORDER[@]}"; do
         "${SETUP_OPTIONS[$option]}"
