@@ -152,7 +152,7 @@ EOF
     sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
     getent group docker || sudo groupadd docker
     sudo usermod -aG docker $USER
-    newgrp docker
+    #newgrp docker
 
 
     echo "  - Installing VS Code"
