@@ -18,7 +18,7 @@ declare -A SETUP_OPTIONS=(
     ["xfce"]="install_xfce"
     ["display-settings"]="install_display_settings"
 )
-
+SETUP_ORDER_EXCLUDED=(xfce)
 SETUP_ORDER=(init secure dev media apps shell display-settings)
 
 
@@ -94,7 +94,12 @@ show_help() {
     echo "Usage: $0 [OPTIONS]"
     echo "  -c    Clean log directory"
     echo -n "  -i    Setup option: "
-    printf "%s " "${!SETUP_OPTIONS[@]}" | sed 's/ /|/g'
+    for option in "${SETUP_ORDER[@]}"; do
+        printf "%s " "${option}" | sed 's/ /|/g'
+    done
+    for option in "${SETUP_ORDER_EXCLUDED[@]}"; do
+        printf "%s " "${option}" | sed 's/ /|/g'
+    done
     echo "(default: all)"
     echo "  -h    Show this help message"
 }
