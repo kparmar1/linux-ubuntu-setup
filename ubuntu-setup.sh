@@ -11,6 +11,7 @@ BACKGROUND_IMAGE_SOURCE=images/${BACKGROUND_IMAGE}
 declare -A SETUP_OPTIONS=(
     ["init"]="init"
     ["rsnap"]="install_rsnap"
+    ["rtel"]="install_telemetry"
     ["secure"]="install_secure"
     ["dev"]="install_dev"
     ["media"]="install_media"
@@ -20,12 +21,40 @@ declare -A SETUP_OPTIONS=(
     ["display-settings"]="install_display_settings"
 )
 SETUP_ORDER_EXCLUDED=(xfce)
-SETUP_ORDER=(init rsnap secure dev media apps shell display-settings)
+SETUP_ORDER=(init rsnap rtel secure dev media apps shell display-settings)
 
+
+install_telemetry() {
+    echo "Stopping all telemetry.."
+    echo
+    echo
+
+    declare -A TELEMETRY_SITES=(
+    ["www.metrics.ubuntu.com"]="127.0.0.1"
+    ["metrics.ubuntu.com"]="127.0.0.1"
+    ["www.popcon.ubuntu.com"]="127.0.0.1"
+    ["popcon.ubuntu.com"]="127.0.0.1"
+    )
+
+    if command -v ubuntu-report &>/dev/null; then
+        ubuntu-report -f send no
+    fi
+
+    for site in "${!TELEMETRY_SITES[@]}"; do
+        if ! grep -Fq " ${site}" "/etc/hosts"; then
+            echo "${TELEMETRY_SITES[$site]} $site" | sudo tee -a /etc/hosts
+        fi
+    done
+
+    sudo apt-get purge -y ubuntu-report popularity-contest apport whoopsie apport-symptoms
+    sudo apt-mark hold ubuntu-report popularity-contest apport whoopsie apport-symptoms
+    sudo apt-get autoremove -y
+}
 
 install_rsnap() {
-
-    echo "  - Removing Snap & Block"
+    echo "Removing Snap & Block.."
+    echo
+    echo
     snap list | grep -v base | awk '{print $1}' | grep -v Name | grep -v snapd | xargs -I{} sudo snap remove {} --purge
     sudo snap remove snapd-desktop-integration --purge
     snap list | grep -v snapd | awk '{print $1}' | grep -v Name | xargs -I{} sudo snap remove {} --purge
@@ -49,43 +78,21 @@ EOF
 
 init() {
     echo "Initializing setup.."
+    echo
+    echo
 
     echo "  - Updating OS"
     sudo apt-get update -y
     #sudo apt-get upgrade -y
-    
+
+    echo "  - Installing keyring"
     sudo install -m 0755 -d /etc/apt/keyrings
 }
 
 install_secure () {
-    declare -A TELEMETRY_SITES=(
-    ["www.metrics.ubuntu.com"]="127.0.0.1"
-    ["metrics.ubuntu.com"]="127.0.0.1"
-    ["www.popcon.ubuntu.com"]="127.0.0.1"
-    ["popcon.ubuntu.com"]="127.0.0.1"
-    )
-
     echo "Securing the Linux OS.."
     echo
     echo
-
-    # stop all telemtry
-    echo "  - Stopping all telemetry.."
-    if command -v ubuntu-report &>/dev/null; then
-        ubuntu-report -f send no
-    fi
-
-    for site in "${!TELEMETRY_SITES[@]}"; do
-        if ! grep -Fq " ${site}" "/etc/hosts"; then
-            echo "${TELEMETRY_SITES[$site]} $site" | sudo tee -a /etc/hosts
-        fi
-    done
-
-    sudo apt-get purge -y ubuntu-report popularity-contest apport whoopsie apport-symptoms
-    sudo apt-mark hold ubuntu-report popularity-contest apport whoopsie apport-symptoms
-    sudo apt-get autoremove -y
-
-
     echo "  - Enable UFW (firewall).."
     sudo ufw enable
 }
@@ -117,6 +124,9 @@ install_packages_internal() {
 }
 
 install_dev() {
+    echo "Setting up dev tools.."
+    echo
+    echo
     PACKAGES="net-tools
     btop
     fastfetch
@@ -176,6 +186,8 @@ EOF
 
 install_media() {
     echo "Setting up media tools.."
+    echo
+    echo
     PACKAGES="ffmpeg
     gimp
     audacity
@@ -185,6 +197,8 @@ install_media() {
 
 install_apps() {
     echo "Setting up other applications.."
+    echo
+    echo
     PACKAGES=""
     install_packages_internal ${PACKAGES}
     install_apps_complex
@@ -215,7 +229,9 @@ EOF
 }
 
 install_shell() {
-    echo "  - Installing Fish Shell"
+    echo "Installing Fish Shell"
+    echo
+    echo
     sudo apt-get install fish -y
     command -v fish | sudo tee -a /etc/shells
     chsh -s "$(command -v fish)"
@@ -223,11 +239,15 @@ install_shell() {
 
 install_xfce () {
     echo "Installing desktop env (xfce).."
+    echo
+    echo
     sudo apt-get install xfce4 xfce4-goodies -y
 }
 
 install_display_settings() {
     echo "Setting up display settings..."
+    echo
+    echo
     gsettings set org.gnome.desktop.interface color-scheme prefer-dark
     mkdir -p ${BACKGROUND_IMAGE_TARGET}
     cp --update=none ${BACKGROUND_IMAGE_SOURCE} ${BACKGROUND_IMAGE_TARGET}/${BACKGROUND_IMAGE}

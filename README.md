@@ -7,7 +7,7 @@ A bash script to set up an Ubuntu machine with custom configurations.
 ```bash
 ./ubuntu-setup.sh [OPTIONS]
   -c    Clean log directory
-  -i    Setup option: init|rsnap|secure|dev|media|apps|shell|xfce|display-settings|all (required)
+  -i    Setup option: init|rsnap|rtel|secure|dev|media|apps|shell|xfce|display-settings|all (required)
   -h    Show this help message
 ```
 
@@ -16,15 +16,15 @@ A bash script to set up an Ubuntu machine with custom configurations.
 - `-c` - Clean log files from the `log/` directory
 - `-i init` - Initialize system (apt update, create keyrings directory)
 - `-i rsnap` - Remove Snap completely with thorough cleanup (disable services, mask, hold snapd package)
-- `-i secure` - Block Ubuntu telemetry sites, enable firewall (UFW)
+- `-i rtel` - Remove Ubuntu telemetry (block telemetry sites in /etc/hosts, purge telemetry packages, disable ubuntu-report)
+- `-i secure` - Enable firewall (UFW)
 - `-i dev` - Set up development environment (Docker, VS Code, Java 21/25, Git, Kitty, SSH keys)
 - `-i media` - Set up media tools (FFmpeg, GIMP, Audacity, VLC)
 - `-i apps` - Set up applications (Firefox, Brave, Thunderbird)
 - `-i shell` - Install Fish shell and set as default
 - `-i xfce` - Install XFCE desktop environment
 - `-i display-settings` - Set dark color scheme and desktop background
-- `-i all` - Run all setup options (in order: init → rsnap → secure → dev → media → apps → shell → display-settings)
-- `-i rsnap` - Remove Snap completely with thorough cleanup (disable services, mask, hold snapd package)
+- `-i all` - Run all setup options (in order: init → rsnap → rtel → secure → dev → media → apps → shell → display-settings)
 - `-h` - Show help message
 
 ### Examples
@@ -42,6 +42,9 @@ A bash script to set up an Ubuntu machine with custom configurations.
 # Remove snap and set up dev environment
 ./ubuntu-setup.sh -i rsnap
 ./ubuntu-setup.sh -i dev
+
+# Remove telemetry services
+./ubuntu-setup.sh -i rtel
 
 # Set up multiple specific options
 ./ubuntu-setup.sh -i init
