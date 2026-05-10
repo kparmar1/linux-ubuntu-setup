@@ -7,14 +7,15 @@ A bash script to set up an Ubuntu machine with custom configurations.
 ```bash
 ./ubuntu-setup.sh [OPTIONS]
   -c    Clean log directory
-  -i    Setup option: init|secure|dev|media|apps|shell|xfce|display-settings|all (required)
+  -i    Setup option: init|rsnap|secure|dev|media|apps|shell|xfce|display-settings|all (required)
   -h    Show this help message
 ```
 
 ### Options
 
 - `-c` - Clean log files from the `log/` directory
-- `-i init` - Initialize system (apt update/upgrade, remove snap, install flatpak)
+- `-i init` - Initialize system (apt update, create keyrings directory)
+- `-i rsnap` - Remove Snap completely with thorough cleanup (disable services, mask, hold snapd package)
 - `-i secure` - Block Ubuntu telemetry sites, enable firewall (UFW)
 - `-i dev` - Set up development environment (Docker, VS Code, Java 21/25, Git, Kitty, SSH keys)
 - `-i media` - Set up media tools (FFmpeg, GIMP, Audacity, VLC)
@@ -22,7 +23,8 @@ A bash script to set up an Ubuntu machine with custom configurations.
 - `-i shell` - Install Fish shell and set as default
 - `-i xfce` - Install XFCE desktop environment
 - `-i display-settings` - Set dark color scheme and desktop background
-- `-i all` - Run all setup options (in order: init → secure → dev → media → apps → shell → display-settings)
+- `-i all` - Run all setup options (in order: init → rsnap → secure → dev → media → apps → shell → display-settings)
+- `-i rsnap` - Remove Snap completely with thorough cleanup (disable services, mask, hold snapd package)
 - `-h` - Show help message
 
 ### Examples
@@ -35,6 +37,10 @@ A bash script to set up an Ubuntu machine with custom configurations.
 ./ubuntu-setup.sh -i all
 
 # Set up only development environment
+./ubuntu-setup.sh -i dev
+
+# Remove snap and set up dev environment
+./ubuntu-setup.sh -i rsnap
 ./ubuntu-setup.sh -i dev
 
 # Set up multiple specific options

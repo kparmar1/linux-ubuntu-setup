@@ -10,6 +10,7 @@ BACKGROUND_IMAGE_SOURCE=images/${BACKGROUND_IMAGE}
 
 declare -A SETUP_OPTIONS=(
     ["init"]="init"
+    ["rsnap"]="install_rsnap"
     ["secure"]="install_secure"
     ["dev"]="install_dev"
     ["media"]="install_media"
@@ -19,36 +20,40 @@ declare -A SETUP_OPTIONS=(
     ["display-settings"]="install_display_settings"
 )
 SETUP_ORDER_EXCLUDED=(xfce)
-SETUP_ORDER=(init secure dev media apps shell display-settings)
+SETUP_ORDER=(init rsnap secure dev media apps shell display-settings)
 
+
+install_rsnap() {
+
+    echo "  - Removing Snap & Block"
+    snap list | grep -v base | awk '{print $1}' | grep -v Name | grep -v snapd | xargs -I{} sudo snap remove {} --purge
+    sudo snap remove snapd-desktop-integration --purge
+    snap list | grep -v snapd | awk '{print $1}' | grep -v Name | xargs -I{} sudo snap remove {} --purge
+
+    sudo systemctl stop --now snapd.service snapd.socket snapd.seeded.service
+    sudo systemctl disable --now snapd.service snapd.socket snapd.seeded.service
+    sudo systemctl mask snapd.service
+    sudo systemctl mask snapd.socket
+    sudo systemctl mask snapd.seeded.service
+
+    sudo apt-get remove --purge -y snapd
+    sudo rm -rf /snap /var/snap /var/cache/snapd /var/lib/snapd /usr/lib/snapd ~/snap
+    sudo tee /etc/apt/preferences.d/no-snap.pref <<EOF
+    Package: snapd
+    Pin: release a=*
+    Pin-Priority: -10
+EOF
+    sudo apt-mark hold snapd
+    sudo apt-get autoremove
+}
 
 init() {
     echo "Initializing setup.."
 
     echo "  - Updating OS"
     sudo apt-get update -y
-    sudo apt-get upgrade -y
-
-    echo "  - Removing Snap & Block"
-    snap list | grep -v base | awk '{print $1}' | grep -v Name | grep -v snapd | xargs -I{} sudo snap remove {} --purge
-    snap list | grep base | awk '{print $1}' | grep -v Name | xargs -I{} sudo snap remove {} --purge
-    sudo systemctl disable --now snapd.socket snapd.service
-    sudo apt-get remove --purge -y snapd
-    sudo rm -rf /var/cache/snapd ~/snap /snap /var/snap
-    sudo tee /etc/apt/preferences.d/no-snap.pref <<EOF
-    Package: snapd
-    Pin: release a=*
-    Pin-Priority: -10
-EOF
-    sudo apt-get autoremove
-
-    echo "  - Installing Flatpak"
-    sudo apt-get install flatpak -y
-
-    echo "  - Ubuntu Restricted Extras"
-    echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
-    sudo apt-get install ubuntu-restricted-extras -y
-
+    #sudo apt-get upgrade -y
+    
     sudo install -m 0755 -d /etc/apt/keyrings
 }
 
@@ -127,12 +132,14 @@ install_dev() {
     gawk
     kitty
     flameshot
-    vim"
+    vim
+    flatpak"
     install_packages_internal ${PACKAGES}
     install_dev_complex
 }
 
 install_dev_complex() {
+
     echo "  - Copying keys (if found)"
     mkdir -p ~/.ssh
     chmod 700 ~/.ssh
