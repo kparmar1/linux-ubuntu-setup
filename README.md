@@ -14,16 +14,16 @@ A bash script to set up an Ubuntu machine with custom configurations.
 ### Options
 
 - `-c` - Clean log files from the `log/` directory
-- `-i init` - Initialize system (apt update, create keyrings directory)
-- `-i rsnap` - Remove Snap completely with thorough cleanup (disable services, mask, hold snapd package)
-- `-i rtel` - Remove Ubuntu telemetry (block telemetry sites in /etc/hosts, purge telemetry packages, disable ubuntu-report)
-- `-i secure` - Enable firewall (UFW)
-- `-i dev` - Set up development environment (Docker, VS Code, Java 21/25, Git, Kitty, SSH keys)
-- `-i media` - Set up media tools (FFmpeg, GIMP, Audacity, VLC)
-- `-i apps` - Set up applications (Firefox, Brave, Thunderbird)
-- `-i shell` - Install Fish shell and set as default
-- `-i xfce` - Install XFCE desktop environment
-- `-i display-settings` - Set dark color scheme and desktop background
+- `-i init` - Updates apt, creates keyrings directory
+- `-i rsnap` - Completely removes Snap (stops/masks services, purges, holds package)
+- `-i rtel` - Blocks telemetry sites in `/etc/hosts`, purges telemetry packages
+- `-i secure` - Enables UFW firewall
+- `-i dev` - Installs dev tools: Docker, VS Code, Java 21/25, Git, Kitty, Vim, Flatpak, SSH key setup
+- `-i media` - FFmpeg, GIMP, Audacity, VLC
+- `-i apps` - Firefox (Mozilla repo), Brave, Thunderbird
+- `-i shell` - Installs Fish shell as default
+- `-i xfce` - XFCE desktop environment
+- `-i display-settings` - Dark mode, sets desktop background
 - `-i all` - Run all setup options (in order: init → rsnap → rtel → secure → dev → media → apps → shell → display-settings)
 - `-h` - Show help message
 
