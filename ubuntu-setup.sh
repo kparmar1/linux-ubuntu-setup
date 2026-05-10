@@ -10,8 +10,8 @@ BACKGROUND_IMAGE_SOURCE=images/${BACKGROUND_IMAGE}
 
 declare -A SETUP_OPTIONS=(
     ["init"]="init"
-    ["rsnap"]="install_rsnap"
-    ["rtel"]="install_telemetry"
+    ["rsnap"]="install_remove_snap"
+    ["rtel"]="install_remove_telemetry"
     ["secure"]="install_secure"
     ["dev"]="install_dev"
     ["media"]="install_media"
@@ -24,7 +24,7 @@ SETUP_ORDER_EXCLUDED=(xfce)
 SETUP_ORDER=(init rsnap rtel secure dev media apps shell display-settings)
 
 
-install_telemetry() {
+install_remove_telemetry() {
     echo "Stopping all telemetry.."
     echo
     echo
@@ -51,7 +51,7 @@ install_telemetry() {
     sudo apt-get autoremove -y
 }
 
-install_rsnap() {
+install_remove_snap() {
     echo "Removing Snap & Block.."
     echo
     echo
