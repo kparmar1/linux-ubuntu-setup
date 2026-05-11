@@ -159,6 +159,7 @@ install_dev_complex() {
     cp -p ${KEY_FILES}/* ~/.ssh/ 2>/dev/null || true
 
     echo "  - Installing Docker"
+    # shellcheck disable=SC2046
     sudo apt-get remove $(dpkg --get-selections docker.io docker-compose docker-compose-v2 docker-doc podman-docker containerd runc | cut -f1)
     sudo apt-get update
     sudo apt-get install ca-certificates curl -y
@@ -219,7 +220,6 @@ EOF
     sudo apt-get update
     sudo apt-get install firefox
 
-
     echo "  - Installing Brave"
     curl -fsS https://dl.brave.com/install.sh | sh
 
@@ -229,6 +229,10 @@ EOF
     sudo apt-get update -y
     sudo apt-get install --allow-downgrades thunderbird -y
 
+    echo "  - Installing Steam"
+    sudo add-apt-repository multiverse
+    sudo apt update
+    sudo apt install steam-installer
 }
 
 install_shell() {

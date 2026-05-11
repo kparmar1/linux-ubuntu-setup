@@ -20,7 +20,7 @@ A bash script to set up an Ubuntu machine with custom configurations.
 - `-i secure` - Enables UFW firewall
 - `-i dev` - Installs dev tools: Docker, VS Code, Java 21/25, Git, Kitty, Vim, Flatpak, SSH key setup
 - `-i media` - FFmpeg, GIMP, Audacity, VLC
-- `-i apps` - Firefox (Mozilla repo), Brave, Thunderbird
+- `-i apps` - Firefox (Mozilla repo), Brave, Thunderbird, Steam
 - `-i shell` - Installs Fish shell as default
 - `-i xfce` - XFCE desktop environment
 - `-i display-settings` - Dark mode, sets desktop background
