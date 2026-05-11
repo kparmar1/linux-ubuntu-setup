@@ -130,7 +130,8 @@ install_dev() {
     PACKAGES="net-tools
     btop
     fastfetch
-    git subversion
+    git
+    subversion
     util-linux-extra
     finger
     keepassxc
@@ -143,7 +144,9 @@ install_dev() {
     kitty
     flameshot
     vim
-    flatpak"
+    flatpak
+    xclip
+    wmctrl"
     install_packages_internal ${PACKAGES}
     install_dev_complex
 }
