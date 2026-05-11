@@ -230,9 +230,9 @@ EOF
     sudo apt-get install --allow-downgrades thunderbird -y
 
     echo "  - Installing Steam"
-    sudo add-apt-repository multiverse
-    sudo apt update
-    sudo apt install steam-installer
+    sudo add-apt-repository multiverse -y
+    sudo apt update -y
+    sudo apt install steam-installer -y
 }
 
 install_shell() {
