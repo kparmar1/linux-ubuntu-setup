@@ -48,7 +48,7 @@ install_remove_telemetry() {
 
     sudo apt-get purge -y ubuntu-report popularity-contest apport whoopsie apport-symptoms
     sudo apt-mark hold ubuntu-report popularity-contest apport whoopsie apport-symptoms
-    sudo apt-get autoremove -y
+    #sudo apt-get autoremove -y
 }
 
 install_remove_snap() {
@@ -146,7 +146,8 @@ install_dev() {
     vim
     flatpak
     xclip
-    wmctrl"
+    wmctrl
+    tmux"
     install_packages_internal ${PACKAGES}
     install_dev_complex
 }
