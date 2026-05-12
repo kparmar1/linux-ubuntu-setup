@@ -180,12 +180,16 @@ EOF
     sudo usermod -aG docker $USER
     #newgrp docker
 
-
     echo "  - Installing VS Code"
     wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo install -D -o root -g root -m 644 /dev/stdin /etc/apt/keyrings/packages.microsoft.gpg
     echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | sudo tee /etc/apt/sources.list.d/vscode.list
     sudo apt-get update -y
     sudo apt-get install code -y
+
+    echo "  - Installing Intellij Community"
+    sudo add-apt-repository ppa:xtradeb/apps -y
+    sudo apt update -y
+    sudo apt install intellij-idea-community -y
 }
 
 install_media() {
