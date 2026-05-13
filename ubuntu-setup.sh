@@ -216,6 +216,17 @@ EOL
     echo "  - Installing Opencode"
     curl -fsSL https://opencode.ai/install | bash
 
+    echo "  - Installing QEMU,KVM and virsh"
+    sudo apt update -y
+    sudo apt install ubuntu-helper-virt-hwe -y
+    sudo ubuntu_virt_helper switch
+
+    sudo apt install qemu-system-x86-hwe -y
+
+    sudo apt install libvirt-daemon-system libvirt-clients bridge-utils virtinst virt-manager -y
+    sudo systemctl enable --now libvirtd
+    sudo usermod -aG libvirt,kvm $USER    # requires logout/login (or run below manually)
+    #newgrp libvirt
 }
 
 install_media() {
