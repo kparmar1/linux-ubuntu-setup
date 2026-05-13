@@ -212,6 +212,10 @@ Terminal=false
 Type=Application
 Categories=Development;
 EOL
+
+    echo "  - Installing Opencode"
+    curl -fsSL https://opencode.ai/install | bash
+
 }
 
 install_media() {
