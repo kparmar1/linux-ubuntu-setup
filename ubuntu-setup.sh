@@ -196,6 +196,22 @@ EOF
     echo "  - Installing Joplin"
     sudo apt install libfuse2 -y
     wget -O - https://raw.githubusercontent.com/laurent22/joplin/dev/Joplin_install_and_update.sh | bash
+    
+    echo "  - Installing Postman"
+    wget https://dl.pstmn.io/download/latest/linux64 -O postman.tar.gz
+    sudo tar -xzf postman.tar.gz -C /opt
+    sudo ln -s /opt/Postman/Postman /usr/bin/postman
+    rm postman.tar.gz
+    cat > ~/.local/share/applications/postman.desktop <<EOL
+[Desktop Entry]
+Encoding=UTF-8
+Name=Postman
+Exec=postman
+Icon=/opt/Postman/app/resources/app/assets/icon.png
+Terminal=false
+Type=Application
+Categories=Development;
+EOL
 }
 
 install_media() {
