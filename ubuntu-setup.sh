@@ -194,6 +194,7 @@ EOF
     sudo apt install intellij-idea-community -y
 
     echo "  - Installing Joplin"
+    sudo apt install libfuse2 -y
     wget -O - https://raw.githubusercontent.com/laurent22/joplin/dev/Joplin_install_and_update.sh | bash
 }
 
