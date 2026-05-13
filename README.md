@@ -18,9 +18,9 @@ A bash script to set up an Ubuntu machine with custom configurations.
 - `-i rsnap` - Completely removes Snap (stops/masks services, purges, holds package)
 - `-i rtel` - Blocks telemetry sites in `/etc/hosts`, purges telemetry packages
 - `-i secure` - Enables UFW firewall
-- `-i dev` - Installs dev tools: Docker, VS Code, IntelliJ IDEA Community, Java (OpenJDK 21 & 25), Git, Subversion, net-tools, btop, fastfetch, util-linux-extra, finger, KeePassXC, curl, apt-file, Timeshift, gawk, Kitty, Flameshot, Vim, Flatpak, xclip, wmctrl, tmux, SSH key setup
+- `-i dev` - Installs dev tools: Docker, VS Code, IntelliJ IDEA Community, Java (OpenJDK 21 & 25), Git, Subversion, net-tools, btop, fastfetch, util-linux-extra, finger, KeePassXC, curl, apt-file, Timeshift, gawk, Kitty, Flameshot, Vim, Flatpak, xclip, wmctrl, tmux, gocryptfs, Joplin, Postman, Opencode, QEMU/KVM/virsh, SSH key setup
 - `-i media` - FFmpeg, GIMP, Audacity, VLC
-- `-i apps` - Firefox (Mozilla repo), Brave, Thunderbird, Steam
+- `-i apps` - Firefox (Mozilla repo), Brave, Thunderbird, Steam, Sublime Text
 - `-i shell` - Installs Fish shell as default
 - `-i xfce` - XFCE desktop environment
 - `-i display-settings` - Dark mode, sets desktop background
