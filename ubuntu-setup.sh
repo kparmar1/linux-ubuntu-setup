@@ -147,7 +147,8 @@ install_dev() {
     flatpak
     xclip
     wmctrl
-    tmux"
+    tmux
+    gocryptfs"
     install_packages_internal ${PACKAGES}
     install_dev_complex
 }
