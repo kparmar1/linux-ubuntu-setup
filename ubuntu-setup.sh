@@ -192,6 +192,9 @@ EOF
     sudo add-apt-repository ppa:xtradeb/apps -y
     sudo apt update -y
     sudo apt install intellij-idea-community -y
+
+    echo "  - Installing Joplin"
+    wget -O - https://raw.githubusercontent.com/laurent22/joplin/dev/Joplin_install_and_update.sh | bash
 }
 
 install_media() {
