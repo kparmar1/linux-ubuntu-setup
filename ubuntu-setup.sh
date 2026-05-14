@@ -81,12 +81,16 @@ init() {
     echo
     echo
 
+    echo "  - Passwordless sudo for current user"
+    echo "${USER} ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers\.d/${USER} > /dev/null
+
     echo "  - Updating OS"
     sudo apt-get update -y
     #sudo apt-get upgrade -y
 
     echo "  - Installing keyring"
     sudo install -m 0755 -d /etc/apt/keyrings
+
 }
 
 install_secure () {

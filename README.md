@@ -14,7 +14,7 @@ A bash script to set up an Ubuntu machine with custom configurations.
 ### Options
 
 - `-c` - Clean log files from the `log/` directory
-- `-i init` - Updates apt, creates keyrings directory
+- `-i init` - Configures passwordless sudo, updates apt, creates keyrings directory
 - `-i rsnap` - Completely removes Snap (stops/masks services, purges, holds package)
 - `-i rtel` - Blocks telemetry sites in `/etc/hosts`, purges telemetry packages
 - `-i secure` - Enables UFW firewall
