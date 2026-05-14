@@ -240,7 +240,8 @@ install_media() {
     PACKAGES="ffmpeg
     gimp
     audacity
-    vlc"
+    vlc
+    easyeffects"
     install_packages_internal ${PACKAGES}
 }
 
