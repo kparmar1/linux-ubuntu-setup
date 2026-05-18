@@ -241,7 +241,8 @@ install_media() {
     gimp
     audacity
     vlc
-    easyeffects"
+    easyeffects
+    transmission"
     install_packages_internal ${PACKAGES}
 }
 
