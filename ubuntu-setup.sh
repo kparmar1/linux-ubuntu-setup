@@ -287,6 +287,10 @@ EOF
     sudo apt-get update -y
     sudo apt-get install sublime-text -y
 
+    echo "  - Installing Libre Office"
+    sudo add-apt-repository ppa:libreoffice/ppa
+    sudo apt update -y
+    sudo apt install libreoffice -y
 }
 
 install_shell() {
