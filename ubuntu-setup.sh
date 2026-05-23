@@ -81,8 +81,8 @@ init() {
     echo
     echo
 
-    echo "  - Passwordless sudo for current user"
-    echo "${USER} ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers\.d/${USER} > /dev/null
+    #echo "  - Passwordless sudo for current user"
+    #echo "${USER} ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers\.d/${USER} > /dev/null
 
     echo "  - Updating OS"
     sudo apt-get update -y
