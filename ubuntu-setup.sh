@@ -265,8 +265,8 @@ Package: *
 Pin: origin packages.mozilla.org
 Pin-Priority: 1000
 EOF
-    sudo apt-get update
-    sudo apt-get install firefox
+    sudo apt-get update -y
+    sudo apt-get install firefox -y
 
     echo "  - Installing Brave"
     curl -fsS https://dl.brave.com/install.sh | sh
