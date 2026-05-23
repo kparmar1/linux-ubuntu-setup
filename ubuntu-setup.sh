@@ -152,7 +152,8 @@ install_dev() {
     xclip
     wmctrl
     tmux
-    gocryptfs"
+    gocryptfs
+    neovim"
     install_packages_internal ${PACKAGES}
     install_dev_complex
 }
