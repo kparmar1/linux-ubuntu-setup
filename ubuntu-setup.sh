@@ -153,7 +153,8 @@ install_dev() {
     wmctrl
     tmux
     gocryptfs
-    neovim"
+    neovim
+    powerstat"
     install_packages_internal ${PACKAGES}
     install_dev_complex
 }
