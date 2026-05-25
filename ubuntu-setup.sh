@@ -229,7 +229,7 @@ EOL
 
     sudo apt install qemu-system-x86-hwe -y
 
-    sudo apt install libvirt-daemon-system libvirt-clients bridge-utils virtinst virt-manager -y
+    sudo apt install libvirt-daemon-system libvirt-clients bridge-utils virtinst virt-manager virt-viewer -y
     sudo systemctl enable --now libvirtd
     sudo usermod -aG libvirt,kvm $USER    # requires logout/login (or run below manually)
     #newgrp libvirt
