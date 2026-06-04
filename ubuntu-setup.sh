@@ -154,7 +154,8 @@ install_dev() {
     tmux
     gocryptfs
     neovim
-    powerstat"
+    powerstat
+    zbar-tools"
     install_packages_internal ${PACKAGES}
     install_dev_complex
 }
