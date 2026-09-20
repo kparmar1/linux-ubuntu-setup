@@ -294,6 +294,9 @@ EOF
     sudo add-apt-repository ppa:libreoffice/ppa
     sudo apt update -y
     sudo apt install libreoffice -y
+
+    echo "  - Installing Calibre"
+    sudo -v && wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sudo sh /dev/stdin
 }
 
 install_shell() {
