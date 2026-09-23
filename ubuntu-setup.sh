@@ -155,7 +155,8 @@ install_dev() {
     gocryptfs
     neovim
     powerstat
-    zbar-tools"
+    zbar-tools
+    hwinfo"
     install_packages_internal ${PACKAGES}
     install_dev_complex
 }
