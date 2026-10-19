@@ -246,7 +246,8 @@ install_media() {
     audacity
     vlc
     easyeffects
-    transmission"
+    transmission
+    simplescreenrecorder"
     install_packages_internal ${PACKAGES}
 }
 
