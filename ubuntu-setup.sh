@@ -156,7 +156,9 @@ install_dev() {
     neovim
     powerstat
     zbar-tools
-    hwinfo"
+    hwinfo
+    pandoc
+    lynx"
     install_packages_internal ${PACKAGES}
     install_dev_complex
 }
