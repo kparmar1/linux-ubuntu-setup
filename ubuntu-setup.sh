@@ -235,6 +235,13 @@ EOL
     sudo systemctl enable --now libvirtd
     sudo usermod -aG libvirt,kvm $USER    # requires logout/login (or run below manually)
     #newgrp libvirt
+
+    echo "  - Installing Glow (mark up terminal renderer)"
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
+    sudo apt install glow -y
+
 }
 
 install_media() {
