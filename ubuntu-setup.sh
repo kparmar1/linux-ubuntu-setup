@@ -318,7 +318,7 @@ install_shell() {
     echo
     sudo apt-get install fish -y
     command -v fish | sudo tee -a /etc/shells
-    chsh -s "$(command -v fish)"
+    sudo chsh -s "$(command -v fish)"
 }
 
 install_xfce () {
