@@ -158,7 +158,9 @@ install_dev() {
     zbar-tools
     hwinfo
     pandoc
-    lynx"
+    lynx
+    osinfo-db
+    osinfo-db-tools"
     install_packages_internal ${PACKAGES}
     install_dev_complex
 }
