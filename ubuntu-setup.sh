@@ -73,7 +73,7 @@ install_remove_snap() {
     Pin-Priority: -10
 EOF
     sudo apt-mark hold snapd
-    sudo apt-get autoremove
+    sudo apt-get autoremove -y
 }
 
 init() {
